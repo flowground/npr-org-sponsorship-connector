@@ -1,0 +1,24 @@
+{
+    "type": "object",
+    "properties": {
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        },
+        "forceResult": {
+            "required": false,
+            "type": "boolean"
+        },
+        "adCount": {
+            "required": false,
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1,
+            "maximum": 5
+        },
+        "X_Advertising_ID": {
+            "required": false,
+            "type": "string"
+        }
+    }
+}

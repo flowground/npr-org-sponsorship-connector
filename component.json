@@ -1,0 +1,95 @@
+{
+    "title": "NPR Sponsorship Service",
+    "description": "Sponsorship for non-NPR One client applications",
+    "docsUrl": "https://dev.npr.org/guide/app-experience/sponsorship/",
+    "url": "https://api.apis.guru/v2/specs/npr.org/sponsorship/2/swagger.json",
+    "envVars": {
+        "OAUTH_CLIENT_ID": {
+            "description": "OAuth Client ID"
+        },
+        "OAUTH_CLIENT_SECRET": {
+            "description": "OAuth Client Secret"
+        }
+    },
+    "credentials": {
+        "fields": {
+            "server": {
+                "label": "Server",
+                "viewClass": "SelectView",
+                "model": [
+                    "https://sponsorship.api.npr.org/",
+                    "--- Custom URL"
+                ],
+                "required": true
+            },
+            "otherServer": {
+                "label": "Custom Server URL",
+                "viewClass": "TextFieldView"
+            },
+            "oauth2": {
+                "label": "oauth2",
+                "viewClass": "OAuthFieldView"
+            }
+        },
+        "oauth2": {
+            "client_id": "{{OAUTH_CLIENT_ID}}",
+            "client_secret": "{{OAUTH_CLIENT_SECRET}}",
+            "auth_uri": "https://authorization.api.npr.org/v2/authorize",
+            "token_uri": "https://authorization.api.npr.org/v2/token"
+        }
+    },
+    "triggers": {
+        "startFlow": {
+            "main": "./lib/triggers/startFlow.js",
+            "type": "polling",
+            "title": "Start Flow",
+            "fields": {}
+        }
+    },
+    "actions": {
+        "getAds": {
+            "main": "./lib/actions/getAds.js",
+            "title": "Request DAAST sponsorship units",
+            "description": "**Not** for use by NPR One clients (for whom sponsorship is already integrated into the Listening Service), this endpoint is designed to be used by our other client applications to request sponsorship on behalf of a user. Sponsorship units are returned in the form of DAAST XML. It is worth noting that this endpoint attempts to always return XML, even in the case of exceptions.\n\nThe default behavior of this endpoint is asynchronous; on an initial request, a call to our external sponsorship provider is placed on a queue, which is typically processed within 3 minutes. Once the sponsorship call is received and processed, the returned sponsorship units are placed in a cache on our server for the current user. Subsequent calls to this endpoint will return DAAST sponsorship units from this cache until tracking information is submitted, which removes the ad from the cache and will automatically request additional ads asynchronously if there are fewer than a certain number remaining in the cache.\n\nFor development purposes, it's worth noting that there is currently no way to clear a user's cache without submitting some form of tracking.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/getAds.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        },
+        "receiveAdTracking": {
+            "main": "./lib/actions/receiveAdTracking.js",
+            "title": "Record tracking data for DAAST sponsorship units",
+            "description": "**Not** for use by NPR One clients (for whom sponsorship is already integrated into the Listening Service), this endpoint is designed to be used by our other client applications to submit tracking information for sponsorship units obtained from the `GET /sponsorship/v2/ads` endpoint.\n\nThe tracking information should be submitted in the body of the request in the form of a JSON object following the Collection.Doc+JSON specification.",
+            "fields": {
+                "verbose": {
+                    "viewClass": "CheckBoxView",
+                    "label": "Debug this step (log more data)"
+                },
+                "body_content_type": {
+                    "viewClass": "SelectView",
+                    "label": "Body Content-Type",
+                    "required": true,
+                    "prompt": "Choose a body Content-Type.",
+                    "model": {
+                        "application/json": "application/json",
+                        "application/vnd.collection.doc+json": "application/vnd.collection.doc+json"
+                    }
+                }
+            },
+            "metadata": {
+                "in": "./lib/schemas/receiveAdTracking.in.json",
+                "out": {
+                    "type": "object"
+                }
+            }
+        }
+    }
+}

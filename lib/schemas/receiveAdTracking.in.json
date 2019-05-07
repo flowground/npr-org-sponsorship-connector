@@ -1,0 +1,172 @@
+{
+    "type": "object",
+    "properties": {
+        "Authorization": {
+            "required": true,
+            "type": "string"
+        },
+        "requestBody": {
+            "allOf": [
+                {
+                    "description": "Base Collection.Doc+JSON output",
+                    "properties": {
+                        "attributes": {
+                            "type": "object"
+                        },
+                        "errors": {
+                            "description": "A list of encountered errors, ignored on POST, PUT",
+                            "items": {
+                                "type": "object"
+                            },
+                            "type": "array"
+                        },
+                        "href": {
+                            "description": "A URL representation of the resource; should generally be ignored by clients unless noted otherwise",
+                            "type": "string"
+                        },
+                        "items": {
+                            "items": {
+                                "type": "object"
+                            },
+                            "type": "array"
+                        },
+                        "links": {
+                            "type": "object"
+                        },
+                        "version": {
+                            "default": "1.0",
+                            "description": "The version of the Collection.Doc+JSON spec being used",
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "version",
+                        "href",
+                        "attributes",
+                        "items",
+                        "links",
+                        "errors"
+                    ],
+                    "type": "object"
+                },
+                {
+                    "properties": {
+                        "attributes": {
+                            "description": "All information relevant to a user who has requested sponsorship or submitted tracking information",
+                            "properties": {
+                                "ipAddress": {
+                                    "description": "The TCP/IP address of the client making the request. The server will attempt to grab this from the headers, so it probably does not need to be passed in the body unless you get back an error message stating that we were unable to determine an IP address from the request.",
+                                    "type": "string"
+                                },
+                                "listenerId": {
+                                    "description": "A client-designated unique identifier for the logged-in user, only used if neither an NPR.org public user ID nor an `X-Advertising-ID` header are available.",
+                                    "type": "string"
+                                },
+                                "userAgent": {
+                                    "description": "An identifying string for the browser making the request. The server will attempt to grab this from the headers, so it probably does not need to be passed in the body unless you get back an error message stating that we were unable to determine a User-Agent from the request.",
+                                    "type": "string"
+                                }
+                            },
+                            "type": "object"
+                        },
+                        "items": {
+                            "description": "All the information needed for the Sponsorship Service to send back tracking information to our external sponsorship provider",
+                            "items": {
+                                "allOf": [
+                                    {
+                                        "description": "Base Collection.Doc+JSON output",
+                                        "properties": {
+                                            "attributes": {
+                                                "type": "object"
+                                            },
+                                            "errors": {
+                                                "description": "A list of encountered errors, ignored on POST, PUT",
+                                                "items": {
+                                                    "type": "object"
+                                                },
+                                                "type": "array"
+                                            },
+                                            "href": {
+                                                "description": "A URL representation of the resource; should generally be ignored by clients unless noted otherwise",
+                                                "type": "string"
+                                            },
+                                            "items": {
+                                                "items": {
+                                                    "type": "object"
+                                                },
+                                                "type": "array"
+                                            },
+                                            "links": {
+                                                "type": "object"
+                                            },
+                                            "version": {
+                                                "default": "1.0",
+                                                "description": "The version of the Collection.Doc+JSON spec being used",
+                                                "type": "string"
+                                            }
+                                        },
+                                        "required": [
+                                            "version",
+                                            "href",
+                                            "attributes",
+                                            "items",
+                                            "links",
+                                            "errors"
+                                        ],
+                                        "type": "object"
+                                    },
+                                    {
+                                        "properties": {
+                                            "attributes": {
+                                                "description": "All the information needed for the Sponsorship Service to send back tracking information to our external sponsorship provider",
+                                                "properties": {
+                                                    "adId": {
+                                                        "description": "The DAAST Ad node `id` attribute value, (e.g. AdswizzAd12345)",
+                                                        "type": "string"
+                                                    },
+                                                    "event": {
+                                                        "default": "start",
+                                                        "description": "The user-interaction event to submit tracking for",
+                                                        "enum": [
+                                                            "start",
+                                                            "firstQuartile",
+                                                            "midpoint",
+                                                            "thirdQuartile",
+                                                            "complete"
+                                                        ],
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                "required": [
+                                                    "adId",
+                                                    "event"
+                                                ],
+                                                "type": "object"
+                                            },
+                                            "items": {
+                                                "description": "Not used",
+                                                "items": {
+                                                    "type": "object"
+                                                },
+                                                "type": "array"
+                                            }
+                                        },
+                                        "type": "object"
+                                    }
+                                ],
+                                "description": "All the information needed for the Sponsorship Service to send back tracking information to our external sponsorship provider"
+                            },
+                            "type": "array"
+                        }
+                    },
+                    "type": "object"
+                }
+            ],
+            "description": "All information relevant to a user who has requested sponsorship or submitted tracking information"
+        },
+        "X_Advertising_ID": {
+            "required": false,
+            "type": "string"
+        }
+    }
+}
